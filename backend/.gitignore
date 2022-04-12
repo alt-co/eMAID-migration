@@ -1,0 +1,13 @@
+node_modules/
+logs/
+build/
+mnt/
+coverage/
+state_logs/
+.env
+.env-test
+yarn-error.log
+.vscode/settings.json
+.nyc_output
+exports/
+.DS_STORE

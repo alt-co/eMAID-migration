@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  stakehoundbackend:
+    image: stakehoundbackend-prod
+    build:
+      context: .
+      dockerfile: ./Dockerfile.prod
+    environment:
+      NODE_PATH: /usr/src/app/build
+      NODE_ENV: production

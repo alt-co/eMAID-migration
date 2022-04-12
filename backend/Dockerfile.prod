@@ -1,0 +1,27 @@
+FROM node:lts AS build
+WORKDIR /usr/src/app
+COPY package.json /usr/src/app/
+COPY yarn.lock /usr/src/app/
+COPY tsconfig.json /usr/src/app/
+COPY src/ /usr/src/app/src
+COPY package.json /usr/src/app/
+COPY .nycrc.json /usr/src/app/
+RUN yarn install --frozen-lockfile
+RUN yarn build
+RUN rm -fr node_modules
+RUN yarn install --frozen-lockfile --production
+
+FROM node:lts-alpine
+RUN apk add dumb-init
+RUN ln -s /lib/ld-musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
+ENV NODE_ENV production
+ENV NODE_PATH /usr/src/app/build
+USER node
+WORKDIR /usr/src/app
+RUN chown node:node /usr/src/app
+COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
+COPY --chown=node:node --from=build /usr/src/app/build /usr/src/app/build
+COPY --chown=node:node --from=build /usr/src/app/src /usr/src/app/src
+COPY --chown=node:node --from=build /usr/src/app/package.json /usr/src/app/package.json
+COPY --chown=node:node --from=build /usr/src/app/.nycrc.json /usr/src/app/.nycrc.json
+ENTRYPOINT ["dumb-init", "node", "build/index.js"]

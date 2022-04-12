@@ -1,0 +1,20 @@
+FROM node:lts
+
+RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.2.4/dumb-init_1.2.4_x86_64
+RUN chmod +x /usr/local/bin/dumb-init
+
+WORKDIR /usr/src/app
+
+COPY --chown=node:node yarn.lock .
+COPY --chown=node:node package.json .
+COPY --chown=node:node .nycrc.json .
+COPY --chown=node:node tsconfig.json .
+
+RUN yarn install --frozen-lockfile
+RUN tar cf node_modules.tar node_modules
+RUN chown node:node node_modules.tar
+
+USER node
+
+ENTRYPOINT [ "dumb-init", "--" ]
+CMD sh -c 'tar xvf node_modules.tar && yarn watch'
