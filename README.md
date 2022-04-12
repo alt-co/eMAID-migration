@@ -1,4 +1,4 @@
-# maidsafe-erc20
+# eMAID-migration
 
 ## Specification
 
