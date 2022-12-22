@@ -27,7 +27,7 @@ export class GnosisSafeService extends SupplyController {
     super();
     
     const txServiceUrls: {[network: string]: string} = {
-      'mainnet': 'https://safe-transaction.gnosis.io',
+      'mainnet': 'https://safe-transaction-mainnet.safe.global',
       'rinkeby': 'https://safe-transaction.rinkeby.gnosis.io',
     };
 
