@@ -59,7 +59,8 @@ export class OmniExplorerService {
 
     public filterBurnTransactionsForAddress(sendingAddress: string, transactions: OmniExplorerTransaction[]) {
         return transactions.filter(t => {
-            return t.confirmations >= parseInt(this.requiredConfirmations) &&
+            return t.valid &&
+		t.confirmations >= parseInt(this.requiredConfirmations) &&
                 new BigNumber(t.propertyid).isEqualTo(this.tokenPropertyId) && 
                 t.sendingaddress.trim().toLowerCase() === sendingAddress.trim().toLowerCase();
         });
